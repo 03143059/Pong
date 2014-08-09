@@ -1,0 +1,15 @@
+hacer pings al inicio para calcular lags y sincronizar rendering
+solo el server controla los eventos
+al llegar al centro enviar posicion para realizar ajustes
+
+
+Este sería nuestro proceso:
+
+1. El jugador de Pong que quiera ser Master utiliza el código del MulticastClient y espera mensajes.
+
+2. El jugador (Slave) que quiera buscar juegos iniciados utiliza el MulticastServer para enviar solicitudes (Las solicitudes incluyen su IP:Nombre) y abre un TCPServer esperando conexiones del Master.
+
+3. Cuando el Master recibe una solicitud por multicast, termina el MulticastClient y abre una conexión TCP al Slave (usando el IP del mensaje) y espera que el Slave inicie.
+
+4. Cuando el Slave recibe la conexión TCP, termina el MulticastServer y responde al Master por TCP iniciando el juego.
+
