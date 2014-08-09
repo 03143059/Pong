@@ -190,11 +190,13 @@ public class PongWindow extends JFrame implements ActionListener {
                     exit();
             } else {
                 // Draw subtitle
-                Font fontC = new Font(FONT_NAME, Font.BOLD, (int)(0.06 * height)); // scale 40/500
+                Font fontC = new Font(FONT_NAME, Font.BOLD, (int)(0.08 * height)); // scale 40/500
                 Rectangle ds = fontC.getStringBounds("Juego en Red", g2.getFontRenderContext()).getBounds();
                 g2.setFont(fontC);
+                g2.setColor(Color.lightGray);
                 g2.drawString("Juego en Red", width/2-ds.width/2, d.height + ds.height + g2.getFontMetrics().getAscent());
                 g2.setFont(font);
+                g2.setColor(Color.WHITE);
 
                 // Draw buttons
                 d = font.getStringBounds("INICIAR JUEGO", g2.getFontRenderContext()).getBounds();
