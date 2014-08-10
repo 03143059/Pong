@@ -1,13 +1,11 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +21,10 @@ public class PongWindow extends JFrame implements ActionListener {
     Timer timer;
     boolean isPlay = false;
 
-   private boolean isMaximized = true;
+    private boolean isMaximized = true;
+    private boolean waitForGame = false;
+    private long wfgt1;
+    private long wfgt2;
 
     public PongWindow() {
         super();
@@ -34,7 +35,7 @@ public class PongWindow extends JFrame implements ActionListener {
         }
         this.width = 800;
         this.height = 600;
-        if (isMaximized){
+        if (isMaximized) {
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
             this.width = Math.max(dimension.width, dimension.height);
             this.height = this.width / 16 * 10;
@@ -71,6 +72,17 @@ public class PongWindow extends JFrame implements ActionListener {
         canvas = new MyCanvas();
 
         this.setVisible(true);
+
+        // Salir si presiona ESC
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == (char)27)
+                    if (JOptionPane.showConfirmDialog(null, "En verdad desea salir del juego?", "Salir",
+                            JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+                        exit();
+            }
+        });
 
         Container c = getContentPane();
         c.setLayout(new BorderLayout(0, 0));
@@ -142,15 +154,48 @@ public class PongWindow extends JFrame implements ActionListener {
             }
 
             // Draw title
-            Font fontB = new Font(FONT_NAME, Font.BOLD, (int)(0.1 * height)); // scale 40/500
+            Font fontB = new Font(FONT_NAME, Font.BOLD, (int) (0.1 * height)); // scale 40/500
             Rectangle d = fontB.getStringBounds("Pong CC8", g2.getFontRenderContext()).getBounds();
             g2.setFont(fontB);
-            g2.drawString("Pong CC8", width/2-d.width/2, d.height);
+            g2.drawString("Pong CC8", width / 2 - d.width / 2, d.height);
 
             Font font = new Font(FONT_NAME, Font.BOLD, (int) (0.04 * height)); // scale 20/500
             g2.setFont(font);
 
-            if (!isPlay) {
+            if (waitForGame) {
+                // Draw subtitle
+                Font fontC = new Font(FONT_NAME, Font.BOLD, (int) (0.08 * height)); // scale 40/500
+                Rectangle ds = fontC.getStringBounds("Juego en Red", g2.getFontRenderContext()).getBounds();
+                g2.setFont(fontC);
+                g2.setColor(Color.lightGray);
+                g2.drawString("Juego en Red", width / 2 - ds.width / 2, d.height + ds.height + g2.getFontMetrics().getAscent());
+                g2.setFont(font);
+                g2.setColor(Color.WHITE);
+
+                // Show message
+                String str = "Esperando un jugador...";
+
+                d = font.getStringBounds(str, g2.getFontRenderContext()).getBounds();
+
+                // agregar puntos suspensivos animados
+                wfgt2 = new Date().getTime();
+                if ((wfgt2-wfgt1)<1000)
+                    str = str.substring(0, str.length()-3);
+                else if ((wfgt2-wfgt1)<2000)
+                    str = str.substring(0, str.length()-2);
+                else if ((wfgt2-wfgt1)<3000)
+                    str = str.substring(0, str.length()-1);
+                else wfgt1 = wfgt2;
+
+                Rectangle2D.Double r1 = new Rectangle2D.Double(width / 2 - d.width / 2 - (int) (0.04 * height),
+                        height / 2 - d.height / 2, d.width + 2 * (int) (0.04 * height), d.height + (int) (0.04 * height));
+                g2.setPaint(Color.black);
+                g2.fill(r1);
+                g2.setColor(Color.WHITE);
+                g2.draw(r1);
+                g2.drawString(str, width / 2 - d.width / 2, height / 2 + g2.getFontMetrics().getAscent());
+
+            } else if (!isPlay) {
                 // Draw buttons
                 d = font.getStringBounds("JUGAR VS PC", g2.getFontRenderContext()).getBounds();
                 Rectangle2D.Double r1 = new Rectangle2D.Double(width / 2 - d.width / 2 - (int) (0.04 * height),
@@ -190,11 +235,11 @@ public class PongWindow extends JFrame implements ActionListener {
                     exit();
             } else {
                 // Draw subtitle
-                Font fontC = new Font(FONT_NAME, Font.BOLD, (int)(0.08 * height)); // scale 40/500
+                Font fontC = new Font(FONT_NAME, Font.BOLD, (int) (0.08 * height)); // scale 40/500
                 Rectangle ds = fontC.getStringBounds("Juego en Red", g2.getFontRenderContext()).getBounds();
                 g2.setFont(fontC);
                 g2.setColor(Color.lightGray);
-                g2.drawString("Juego en Red", width/2-ds.width/2, d.height + ds.height + g2.getFontMetrics().getAscent());
+                g2.drawString("Juego en Red", width / 2 - ds.width / 2, d.height + ds.height + g2.getFontMetrics().getAscent());
                 g2.setFont(font);
                 g2.setColor(Color.WHITE);
 
@@ -228,9 +273,11 @@ public class PongWindow extends JFrame implements ActionListener {
 
                 // Check if buttons are pressed
                 if (r1.contains(new Point2D.Double(x, y))) {
-                    start();
+                    // iniciar juego en red
+                    waitForGame = true;
+                    wfgt1 = new Date().getTime();
                 } else if (r2.contains(new Point2D.Double(x, y))) {
-                    start();
+                    // buscar juego en red
                 } else if (r3.contains(new Point2D.Double(x, y))) {
                     isPlay = false;
                     x = 0;

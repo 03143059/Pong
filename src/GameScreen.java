@@ -114,9 +114,9 @@ public class GameScreen extends JPanel implements ActionListener {
 
     void moveBall() {
         if (points == 10)
-            jackpot("Game Over\nWanna continue playing?", "You win!");
+            jackpot("Fin del Juego\nDesea seguir jugando?", "Has ganado!");
         else if (_points == 10)
-            jackpot("Game Over\nWanna continue playing?", "You lose!");
+            jackpot("Fin del Juego\nDesea seguir jugando?", "Has perdido!");
 
         if (ball.getBounds().intersectsLine(new Line2D.Double(0, height, width, height))) { // bounces bottom
             movement = 0;
@@ -298,8 +298,8 @@ public class GameScreen extends JPanel implements ActionListener {
             keys[e.getKeyCode()] = true;
             if (e.getKeyChar() == (char)27) {
                 timer.stop();
-                if (JOptionPane.showConfirmDialog(null, "Game in progress\n" +
-                                "Wanna continue playing?", "Pause",
+                if (JOptionPane.showConfirmDialog(null, "Juego en progreso\n" +
+                                "Desea continuar jugando?", "Pausa",
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                     timer.start();
                 else {
