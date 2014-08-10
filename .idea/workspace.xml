@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="e137b0d2-b533-4d2b-86a7-20f8d99981ed" name="Default" comment="Added font color to subtitle">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameScreen.java" afterPath="$PROJECT_DIR$/src/GameScreen.java" />
+    <list default="true" readonly="true" id="e137b0d2-b533-4d2b-86a7-20f8d99981ed" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/SearchForGameThread.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/WaitForGameThread.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/PongWindow.java" afterPath="$PROJECT_DIR$/src/PongWindow.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -75,13 +76,50 @@
       <file leaf-file-name="PongWindow.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/PongWindow.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.6243656" vertical-offset="4009" max-vertical-offset="4913">
-              <caret line="186" column="57" selection-start-line="186" selection-start-column="57" selection-end-line="186" selection-end-column="57" />
+            <state vertical-scroll-proportion="0.27918783" vertical-offset="3035" max-vertical-offset="6205">
+              <caret line="197" column="82" selection-start-line="197" selection-start-column="82" selection-end-line="197" selection-end-column="82" />
               <folding>
-                <element signature="e#2548#2926#0" expanded="true" />
-                <element signature="e#2915#2916#0" expanded="true" />
-                <element signature="e#3684#3860#0" expanded="true" />
-                <element signature="e#3845#3846#0" expanded="true" />
+                <element signature="e#2668#3046#0" expanded="true" />
+                <element signature="e#3035#3036#0" expanded="true" />
+                <element signature="e#3916#4092#0" expanded="true" />
+                <element signature="e#4077#4078#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SearchForGameThread.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/SearchForGameThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="935">
+              <caret line="28" column="59" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="70" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MulticastServer.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/MulticastServer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="82" max-vertical-offset="1275">
+              <caret line="53" column="52" selection-start-line="50" selection-start-column="16" selection-end-line="53" selection-end-column="52" />
+              <folding>
+                <element signature="e#359#360#0" expanded="true" />
+                <element signature="e#404#405#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WaitForGameThread.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/WaitForGameThread.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="748">
+              <caret line="34" column="63" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="63" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -100,8 +138,8 @@
       <file leaf-file-name="MulticastClient.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/MulticastClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="184" max-vertical-offset="578">
-              <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
+              <caret line="7" column="61" selection-start-line="7" selection-start-column="50" selection-end-line="7" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -160,6 +198,8 @@
         <option value="$PROJECT_DIR$/src/MyScroller.java" />
         <option value="$PROJECT_DIR$/src/Ticker.java" />
         <option value="$PROJECT_DIR$/src/GameScreen.java" />
+        <option value="$PROJECT_DIR$/src/WaitForGameThread.java" />
+        <option value="$PROJECT_DIR$/src/SearchForGameThread.java" />
         <option value="$PROJECT_DIR$/src/PongWindow.java" />
       </list>
     </option>
@@ -299,8 +339,7 @@
     <property name="restartRequiresConfirmation" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="pong" />
+    <key name="CreateClassDialog.RecentsKey">
       <recent name="" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -308,6 +347,10 @@
       <recent name="C:\Dev\_CC8\Pong\exclude" />
       <recent name="C:\Dev\_CC8\Pong\image" />
       <recent name="C:\Dev\_CC8\Pong\src\pong" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="pong" />
+      <recent name="" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Pong">
@@ -617,7 +660,7 @@
       <workItem from="1407538534358" duration="7185000" />
       <workItem from="1407620332900" duration="205000" />
       <workItem from="1407621223437" duration="4110000" />
-      <workItem from="1407627678929" duration="3062000" />
+      <workItem from="1407627678929" duration="8000000" />
     </task>
     <task id="LOCAL-00001" summary="Update">
       <created>1405609936452</created>
@@ -687,11 +730,15 @@
       <created>1407628389588</created>
       <updated>1407628389588</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Added animated suspension points">
+      <created>1407630763361</created>
+      <updated>1407630763361</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85104000" />
+    <option name="totallyTimeSpent" value="90042000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -784,7 +831,8 @@
     <MESSAGE value="Added 2nd menu" />
     <MESSAGE value="Added new Font and fixed submenu" />
     <MESSAGE value="Added font color to subtitle" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added font color to subtitle" />
+    <MESSAGE value="Added animated suspension points" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added animated suspension points" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -796,14 +844,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/MulticastClient.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="289" max-vertical-offset="629">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Marquee.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="765">
@@ -833,10 +873,10 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="2519" max-vertical-offset="3077">
           <caret line="153" column="0" selection-start-line="153" selection-start-column="0" selection-end-line="153" selection-end-column="0" />
           <folding>
-            <element signature="e#2548#2926#0" expanded="true" />
-            <element signature="e#2915#2916#0" expanded="true" />
-            <element signature="e#3684#3860#0" expanded="true" />
-            <element signature="e#3845#3846#0" expanded="true" />
+            <element signature="e#2668#3046#0" expanded="true" />
+            <element signature="e#3035#3036#0" expanded="true" />
+            <element signature="e#3916#4092#0" expanded="true" />
+            <element signature="e#4077#4078#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -869,7 +909,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1394">
           <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
-          <folding />
+          <folding>
+            <element signature="e#359#360#0" expanded="true" />
+            <element signature="e#404#405#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1084,14 +1127,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/MulticastServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1394">
-          <caret line="38" column="38" selection-start-line="38" selection-start-column="38" selection-end-line="38" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_11/src.zip!/java/awt/Component.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33206832" vertical-offset="55891" max-vertical-offset="164390">
@@ -1151,7 +1186,7 @@
     <entry file="file://$PROJECT_DIR$/src/MulticastClient.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="578">
-          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <caret line="7" column="61" selection-start-line="7" selection-start-column="50" selection-end-line="7" selection-end-column="61" />
           <folding />
         </state>
       </provider>
@@ -1164,15 +1199,46 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/WaitForGameThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="323" max-vertical-offset="748">
+          <caret line="34" column="63" selection-start-line="34" selection-start-column="12" selection-end-line="34" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/MulticastServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="524" max-vertical-offset="1275">
+          <caret line="53" column="52" selection-start-line="50" selection-start-column="16" selection-end-line="53" selection-end-column="52" />
+          <folding>
+            <element signature="e#359#360#0" expanded="true" />
+            <element signature="e#404#405#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SearchForGameThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="405" max-vertical-offset="935">
+          <caret line="28" column="59" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/PongWindow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.6243656" vertical-offset="4009" max-vertical-offset="4913">
-          <caret line="186" column="57" selection-start-line="186" selection-start-column="57" selection-end-line="186" selection-end-column="57" />
+        <state vertical-scroll-proportion="0.27918783" vertical-offset="3035" max-vertical-offset="6205">
+          <caret line="197" column="82" selection-start-line="197" selection-start-column="82" selection-end-line="197" selection-end-column="82" />
           <folding>
-            <element signature="e#2548#2926#0" expanded="true" />
-            <element signature="e#2915#2916#0" expanded="true" />
-            <element signature="e#3684#3860#0" expanded="true" />
-            <element signature="e#3845#3846#0" expanded="true" />
+            <element signature="e#2668#3046#0" expanded="true" />
+            <element signature="e#3035#3036#0" expanded="true" />
+            <element signature="e#3916#4092#0" expanded="true" />
+            <element signature="e#4077#4078#0" expanded="true" />
           </folding>
         </state>
       </provider>
