@@ -27,7 +27,7 @@ public class SearchForGameThread extends Thread {
             if (window.RemotePlayer != null && window.RemotePlayer.startsWith("MASTER")) break;
             try {
                 // construct quote
-                String dString = InetAddress.getLocalHost().toString();
+                String dString = Pong.address.toString();
                 byte[] buf = dString.getBytes();
                 // send it
                 InetAddress group = InetAddress.getByName("230.0.0.1");
