@@ -24,6 +24,7 @@ public class SearchForGameThread extends Thread {
     public void run() {
 
         for (int i = 1; i <= MAX_TRIES; i++) {
+            if (window.RemotePlayer != null && window.RemotePlayer.startsWith("MASTER")) break;
             try {
                 // construct quote
                 String dString = InetAddress.getLocalHost().toString();

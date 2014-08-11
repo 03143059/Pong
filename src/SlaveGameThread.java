@@ -13,7 +13,7 @@ public class SlaveGameThread extends Thread {
     ServerSocket welcomeSocket = null;
 
     public SlaveGameThread(PongWindow window) throws IOException {
-        super("WaitForGameThread");
+        super("SlaveGameThread");
         this.window = window;
         welcomeSocket = new ServerSocket(6789);
     }
@@ -24,6 +24,7 @@ public class SlaveGameThread extends Thread {
             String clientSentence;
             String capitalizedSentence;
             Socket connectionSocket = welcomeSocket.accept();
+            window.RemotePlayer = "MASTER " + connectionSocket.getInetAddress().getHostAddress();
             BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
             DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
             while((clientSentence = inFromClient.readLine()) != null) {

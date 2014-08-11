@@ -95,17 +95,29 @@ public class GameScreen extends JPanel implements ActionListener {
             g2.fill(player);
             g2.draw(ai);
             g2.fill(ai);
+
             Font f = new Font(FONT_NAME, Font.BOLD, height/5);
             g2.setFont(f);        //OLD WILD 8 Bit FONT :D
             setDimension(g2);
-            g2.drawString("" + _points, width / 2 + 30, scoreY);
-            int w = (int)f.getStringBounds(""+points, g2.getFontRenderContext()).getWidth();
-            g2.drawString("" + points, width / 2 - w-30, scoreY);
+            int wp = (int)f.getStringBounds(""+_points, g2.getFontRenderContext()).getWidth();
+            g2.drawString("" + _points, width / 2 + 30, scoreY+(int)(height*0.033));
+            int wh = (int)f.getStringBounds(""+points, g2.getFontRenderContext()).getWidth();
+            g2.drawString("" + points, width / 2 - wh-30, scoreY+(int)(height*0.033));
             for (int i = 0; i < height + 10; i += 10) {
                 Rectangle2D.Double r = new Rectangle2D.Double(width / 2, i, 5, 5);
                 g2.draw(r);
                 g2.fill(r);
             }
+
+            g2.setColor(Color.lightGray);
+            f = new Font(FONT_NAME, Font.BOLD, (int)(height*0.033));
+            int w = (int)f.getStringBounds("PC", g2.getFontRenderContext()).getWidth();
+            int h = (int)f.getStringBounds("PC", g2.getFontRenderContext()).getHeight();
+            g2.setFont(f);
+            g2.drawString("PC", width / 2 + 30 + wp/2-w/2, 2*h);
+            w = (int)f.getStringBounds("HUMANO", g2.getFontRenderContext()).getWidth();
+            g2.drawString("HUMANO", width / 2 - 30 - wh/2-w/2, 2*h);
+
         } catch (NullPointerException exc) {
 
         }

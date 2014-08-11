@@ -98,14 +98,25 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
             Font f = new Font(FONT_NAME, Font.BOLD, height/5);
             g2.setFont(f);        //OLD WILD 8 Bit FONT :D
             setDimension(g2);
-            g2.drawString("" + _points, width / 2 + 30, scoreY);
-            int w = (int)f.getStringBounds(""+points, g2.getFontRenderContext()).getWidth();
-            g2.drawString("" + points, width / 2 - w-30, scoreY);
+            int wp = (int)f.getStringBounds(""+_points, g2.getFontRenderContext()).getWidth();
+            g2.drawString("" + _points, width / 2 + 30, scoreY+30);
+            int wh = (int)f.getStringBounds(""+points, g2.getFontRenderContext()).getWidth();
+            g2.drawString("" + points, width / 2 - wh-30, scoreY+30);
             for (int i = 0; i < height + 10; i += 10) {
                 Rectangle2D.Double r = new Rectangle2D.Double(width / 2, i, 5, 5);
                 g2.draw(r);
                 g2.fill(r);
             }
+
+            g2.setColor(Color.lightGray);
+            f = new Font(FONT_NAME, Font.BOLD, (int)(height*0.033));
+            int w = (int)f.getStringBounds("LOCAL", g2.getFontRenderContext()).getWidth();
+            int h = (int)f.getStringBounds("LOCAL", g2.getFontRenderContext()).getHeight();
+            g2.setFont(f);
+            g2.drawString("LOCAL", width / 2 + 30 + wp/2-w/2, 2*h);
+            w = (int)f.getStringBounds("REMOTO", g2.getFontRenderContext()).getWidth();
+            g2.drawString("REMOTE", width / 2 - 30 - wh/2-w/2, 2*h);
+
         } catch (NullPointerException exc) {
 
         }

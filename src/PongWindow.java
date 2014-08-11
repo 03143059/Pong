@@ -16,13 +16,13 @@ import java.util.logging.Logger;
 public class PongWindow extends JFrame implements ActionListener {
     public static final String TITLE = "Pong - CC8";
     public static final String FONT_NAME = "Texas LED"; //"8BIT WONDER";
+    private static final boolean ISMAXIMIZED = false;
+
     private int width, height, x, y;
     protected MyCanvas canvas;
     Timer timer;
     boolean isPlay = false;
     public String RemotePlayer = null;
-
-    private boolean isMaximized = true;
     private boolean waitForGame = false;
     private long wfgt1;
     private long wfgt2;
@@ -37,7 +37,7 @@ public class PongWindow extends JFrame implements ActionListener {
         }
         this.width = 800;
         this.height = 600;
-        if (isMaximized) {
+        if (ISMAXIMIZED) {
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
             this.width = Math.max(dimension.width, dimension.height);
             this.height = this.width / 16 * 10;
@@ -45,6 +45,7 @@ public class PongWindow extends JFrame implements ActionListener {
             this.setExtendedState(Frame.MAXIMIZED_BOTH);
         } else {
             this.setPreferredSize(new Dimension(width, height));
+            this.setResizable(false);
         }
         this.setSize(this.width, this.height);
         this.setTitle(TITLE);
@@ -250,6 +251,13 @@ public class PongWindow extends JFrame implements ActionListener {
                 RemotePlayer = null;
             }
             // en este punto vuelve al menu principal si no hubo respuesta
+            // start networked game
+            if (RemotePlayer.startsWith("MASTER")) {
+                System.out.println("Iniciar juego con: " + RemotePlayer);
+                NetworkGameScreen screen = new NetworkGameScreen(this);
+                getContentPane().remove(canvas);
+                getContentPane().add(screen, BorderLayout.CENTER);
+            }
         }
 
         // Draw subtitle
