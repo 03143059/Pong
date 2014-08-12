@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.Timer;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.*;
@@ -6,24 +7,28 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class NetworkGameScreen extends JPanel implements ActionListener {
 
-    private static final Boolean DEBUG = true;
     public static final double HORIZONTAL_SCALE = 0.0125;
     public static final double VERTICAL_SCALE = 0.12;
     public static final double BALL_SCALE = 0.025;
     public static final String FONT_NAME = "Texas LED";// "8BIT WONDER";
 
-    private Timer timer, _timer;
-    private int movement, points, _points, score, scorePX, scoreCX, scoreY;
+    private Timer aiTimer, playerTimer;
+    private int movement, points, _points, scoreY;
     private int width, height;
     private Ball ball;
     private final Paddle player;
-    private final AIPaddle ai;
+    private final RemotePaddle ai;
     private boolean right, down, ballMovement;
     private boolean[] keys;
+    public boolean[] remoteKeys;
     private final URL url, _url;
     private final AudioClip clipContact, clipScore;
     private final double SPEED_AI = 5.5;
@@ -31,7 +36,17 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
     private boolean isMouseDown;
     private int mouseY;
 
-    public NetworkGameScreen(JFrame parent) {
+    public LinkedBlockingQueue<String> keystr =  new LinkedBlockingQueue<String>();
+
+    public enum NetworkGameType {
+        MASTER,
+        SLAVE
+    }
+
+    private NetworkGameType networkGameType;
+
+    public NetworkGameScreen(JFrame parent, NetworkGameType networkGameType) {
+        this.networkGameType = networkGameType;
         this.parent = parent;
         this.width = parent.getContentPane().getWidth();
         this.height = parent.getContentPane().getHeight();
@@ -41,38 +56,48 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
         keys = new boolean[256];
         for (int i = 0; i < keys.length; i++)
             keys[i] = false;
+        remoteKeys = new boolean[256];
+        for (int i = 0; i < remoteKeys.length; i++)
+            remoteKeys[i] = false;
         parent.addKeyListener(new MyKeyListener());
         parent.addMouseWheelListener(new MyMouseWheelListener());
         parent.addMouseListener(new MyMouseListener());
         parent.addMouseMotionListener(new MyMouseMotionListener());
         setFocusable(true);
-        score = 0;
         points = 0;
         _points = 0;
         movement = 10;
-        scorePX = width / 6;
-        scoreCX = 430;
         scoreY = height/5;
         ball = getBall();
         ball.setSpeed(6);
         player = getPaddle();
         player.setSpeed(7);
-        ai = getAiPaddle();
+        ai = getRemotePaddle();
         url = Pong.class.getResource("pongLimit.wav");
         _url = Pong.class.getResource("pongScore.wav");
         clipContact = Applet.newAudioClip(url);
         clipScore = Applet.newAudioClip(_url);
-        timer = new Timer(10, this);
-        timer.start();
+
+        // ai and ball Timer
+        aiTimer = new Timer(10, this);
+        aiTimer.start();
+
         ballMovement = true;
+
     }
 
-    private AIPaddle getAiPaddle() {
-        return new AIPaddle(width-(int)(HORIZONTAL_SCALE * width), 0, SPEED_AI, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
+    private RemotePaddle getRemotePaddle() {
+        if (networkGameType == NetworkGameType.MASTER)
+            return new RemotePaddle(width-(int)(HORIZONTAL_SCALE * width), 0, SPEED_AI, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
+        else
+            return new RemotePaddle(0, 0, SPEED_AI, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
     }
 
     private Paddle getPaddle() {
-        return new Paddle(0, 0, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
+        if (networkGameType == NetworkGameType.MASTER)
+            return new Paddle(0, 0, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
+        else
+            return new Paddle(width-(int)(HORIZONTAL_SCALE * width), 0, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
     }
 
     private Ball getBall() {
@@ -97,7 +122,6 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
             g2.fill(ai);
             Font f = new Font(FONT_NAME, Font.BOLD, height/5);
             g2.setFont(f);        //OLD WILD 8 Bit FONT :D
-            setDimension(g2);
             int wp = (int)f.getStringBounds(""+_points, g2.getFontRenderContext()).getWidth();
             g2.drawString("" + _points, width / 2 + 30, scoreY+30);
             int wh = (int)f.getStringBounds(""+points, g2.getFontRenderContext()).getWidth();
@@ -115,7 +139,7 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
             g2.setFont(f);
             g2.drawString("LOCAL", width / 2 + 30 + wp/2-w/2, 2*h);
             w = (int)f.getStringBounds("REMOTO", g2.getFontRenderContext()).getWidth();
-            g2.drawString("REMOTE", width / 2 - 30 - wh/2-w/2, 2*h);
+            g2.drawString("REMOTO", width / 2 - 30 - wh/2-w/2, 2*h);
 
         } catch (NullPointerException exc) {
 
@@ -138,7 +162,6 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
         } else if (ball.getBounds().intersectsLine(new Line2D.Double(width, 0, width, height)))    // removed -11 offset
         {
             if (!ball.getBounds().intersects(ai)) {
-                score = 1;
                 points++;
                 printScore();
                 new GameScore(clipScore).run(); //utilizzo oggetto esterno causa thread.
@@ -155,7 +178,6 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
 
         } else if (ball.getBounds().intersectsLine(new Line2D.Double(0, 0, 0, height))) { // removed -5 offset
             if (!ball.getBounds().intersects(player)) {
-                score = 2;
                 _points++;
                 printScore();
                 new GameScore(clipScore).run(); //utilizzo oggetto esterno causa thread.
@@ -237,11 +259,10 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
         }
     }
 
-
     private void printScore() {
-        timer.stop();
-        _timer = new Timer(300, this);
-        _timer.start();
+        aiTimer.stop();
+        playerTimer = new Timer(300, this);
+        playerTimer.start();
         ballMovement = false;
     }
 
@@ -264,55 +285,56 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
         }
     }
 
-    void setDimension(Graphics2D g2)                                 //check the presence of a custom font
-    {
-        if (!g2.getFont().getName().equals(FONT_NAME)) {
-            g2.setFont(new Font("Serif", Font.BOLD, 50));
-            scoreY = 40;
-            scorePX = width / 5;
-            scoreCX = 450;
-        }
-    }
-
     private void updateStatus() {
         if (player.getY() >= 2)
-            if (keys[KeyEvent.VK_UP]) {
+            if (keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_Q]) {
                 player.move(false);
             }
         if (player.getY() <= (height - 50))
-            if (keys[KeyEvent.VK_DOWN]) {
+            if (keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_A]) {
                 player.move(true);
+            }
+    }
+
+    private void updateRemote() {
+        if (ai.getY() >= 2)
+            if (remoteKeys[KeyEvent.VK_UP] || remoteKeys[KeyEvent.VK_Q]) {
+                ai.move(false);
+            }
+        if (ai.getY() <= (height - 50))
+            if (remoteKeys[KeyEvent.VK_DOWN] || remoteKeys[KeyEvent.VK_A]) {
+                ai.move(true);
             }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(timer)) {
+        if (e.getSource().equals(aiTimer)) {
             if (ballMovement) {
                 updateStatus();
-                ai.moveAi(ball.x, ball.y, ball.width, ball.height);
+                updateRemote();
                 moveBall();
                 repaint();
             }
-        } else if (e.getSource().equals(_timer)) {
+        } else if (e.getSource().equals(playerTimer)) {
             repaint();
-            score = 0;
             ballMovement = true;
-            _timer.stop();
-            timer.start();
+            playerTimer.stop();
+            aiTimer.start();
         }
     }
 
     private class MyKeyListener implements KeyListener {
+
         @Override
         public void keyTyped(KeyEvent e) {
             keys[e.getKeyCode()] = true;
             if (e.getKeyChar() == (char)27) {
-                timer.stop();
+                aiTimer.stop();
                 if (JOptionPane.showConfirmDialog(null, "Juego en progreso\n" +
                                 "Desea continuar jugando?", "Pausa",
                         JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-                    timer.start();
+                    aiTimer.start();
                 else {
                     parent.dispose();
                     System.exit(0);
@@ -323,11 +345,15 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
             keys[e.getKeyCode()] = true;
+            // add key to queue for thread to send
+            keystr.add("true:" + e.getKeyCode());
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
             keys[e.getKeyCode()] = false;
+            // add key to queue for thread to send
+            keystr.add("false:"+e.getKeyCode());
         }
     }
 

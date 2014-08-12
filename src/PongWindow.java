@@ -27,6 +27,7 @@ public class PongWindow extends JFrame implements ActionListener {
     private long wfgt1;
     private long wfgt2;
     private boolean searchForGame = false;
+    private SlaveGameThread slaveGameThread = null;
 
     public PongWindow() {
         super();
@@ -35,8 +36,8 @@ public class PongWindow extends JFrame implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        this.width = 800;
-        this.height = 600;
+        this.width = 640;
+        this.height = 480;
         if (ISMAXIMIZED) {
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
             this.width = Math.max(dimension.width, dimension.height);
@@ -189,7 +190,7 @@ public class PongWindow extends JFrame implements ActionListener {
             }
             // start networked game
             System.out.println("Iniciar juego con: " + RemotePlayer);
-            NetworkGameScreen screen = new NetworkGameScreen(this);
+            NetworkGameScreen screen = new NetworkGameScreen(this, NetworkGameScreen.NetworkGameType.MASTER);
             MasterGameThread master = null;
             try {
                 master = new MasterGameThread(screen);
@@ -254,9 +255,10 @@ public class PongWindow extends JFrame implements ActionListener {
             // start networked game
             if (RemotePlayer.startsWith("MASTER")) {
                 System.out.println("Iniciar juego con: " + RemotePlayer);
-                NetworkGameScreen screen = new NetworkGameScreen(this);
+                NetworkGameScreen screen = new NetworkGameScreen(this, NetworkGameScreen.NetworkGameType.SLAVE);
                 getContentPane().remove(canvas);
                 getContentPane().add(screen, BorderLayout.CENTER);
+                slaveGameThread.SetScreen(screen);
             }
         }
 
@@ -324,7 +326,8 @@ public class PongWindow extends JFrame implements ActionListener {
             wfgt1 = new Date().getTime();
             try {
                 // Esperar conexiones TCP
-                new SlaveGameThread(this).start();
+                slaveGameThread = new SlaveGameThread(this);
+                slaveGameThread.start();
                 // Enviar hostname e IP para que un master me contacte
                 new SearchForGameThread(this).start();
             } catch (Exception e) {

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="naga-3_0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/naga-3_0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

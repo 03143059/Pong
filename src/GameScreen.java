@@ -10,14 +10,13 @@ import java.net.URL;
 
 public class GameScreen extends JPanel implements ActionListener {
 
-    private static final Boolean DEBUG = true;
     public static final double HORIZONTAL_SCALE = 0.0125;
     public static final double VERTICAL_SCALE = 0.12;
     public static final double BALL_SCALE = 0.025;
     public static final String FONT_NAME = "Texas LED";// "8BIT WONDER";
 
     private Timer timer, _timer;
-    private int movement, points, _points, score, scorePX, scoreCX, scoreY;
+    private int movement, points, _points, scoreY;
     private int width, height;
     private Ball ball;
     private final Paddle player;
@@ -46,12 +45,9 @@ public class GameScreen extends JPanel implements ActionListener {
         parent.addMouseListener(new MyMouseListener());
         parent.addMouseMotionListener(new MyMouseMotionListener());
         setFocusable(true);
-        score = 0;
         points = 0;
         _points = 0;
         movement = 10;
-        scorePX = width / 6;
-        scoreCX = 430;
         scoreY = height/5;
         ball = getBall();
         ball.setSpeed(6);
@@ -98,7 +94,6 @@ public class GameScreen extends JPanel implements ActionListener {
 
             Font f = new Font(FONT_NAME, Font.BOLD, height/5);
             g2.setFont(f);        //OLD WILD 8 Bit FONT :D
-            setDimension(g2);
             int wp = (int)f.getStringBounds(""+_points, g2.getFontRenderContext()).getWidth();
             g2.drawString("" + _points, width / 2 + 30, scoreY+(int)(height*0.033));
             int wh = (int)f.getStringBounds(""+points, g2.getFontRenderContext()).getWidth();
@@ -139,7 +134,6 @@ public class GameScreen extends JPanel implements ActionListener {
         } else if (ball.getBounds().intersectsLine(new Line2D.Double(width, 0, width, height)))    // removed -11 offset
         {
             if (!ball.getBounds().intersects(ai)) {
-                score = 1;
                 points++;
                 printScore();
                new GameScore(clipScore).run(); //utilizzo oggetto esterno causa thread.
@@ -156,7 +150,6 @@ public class GameScreen extends JPanel implements ActionListener {
 
         } else if (ball.getBounds().intersectsLine(new Line2D.Double(0, 0, 0, height))) { // removed -5 offset
             if (!ball.getBounds().intersects(player)) {
-                score = 2;
                 _points++;
                 printScore();
                 new GameScore(clipScore).run(); //utilizzo oggetto esterno causa thread.
@@ -265,16 +258,6 @@ public class GameScreen extends JPanel implements ActionListener {
         }
     }
 
-    void setDimension(Graphics2D g2)                                 //check the presence of a custom font
-    {
-        if (!g2.getFont().getName().equals(FONT_NAME)) {
-            g2.setFont(new Font("Serif", Font.BOLD, 50));
-            scoreY = 40;
-            scorePX = width / 5;
-            scoreCX = 450;
-        }
-    }
-
     private void updateStatus() {
         if (player.getY() >= 2)
             if (keys[KeyEvent.VK_UP]) {
@@ -297,7 +280,6 @@ public class GameScreen extends JPanel implements ActionListener {
             }
         } else if (e.getSource().equals(_timer)) {
             repaint();
-            score = 0;
             ballMovement = true;
             _timer.stop();
             timer.start();
