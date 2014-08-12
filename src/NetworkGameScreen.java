@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.Timer;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.*;
@@ -7,9 +6,6 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
@@ -19,6 +15,9 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
     public static final double VERTICAL_SCALE = 0.12;
     public static final double BALL_SCALE = 0.025;
     public static final String FONT_NAME = "Texas LED";// "8BIT WONDER";
+    public static final double BALL_SPEED = 0.005;
+    public static final int SCORE_SHOW_DELAY = 10;
+    public static final double PADDLE_SPEED = 0.01167;
 
     private Timer aiTimer, playerTimer;
     private int movement, points, _points, scoreY;
@@ -31,7 +30,6 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
     public boolean[] remoteKeys;
     private final URL url, _url;
     private final AudioClip clipContact, clipScore;
-    private final double SPEED_AI = 5.5;
     JFrame parent;
     private boolean isMouseDown;
     private int mouseY;
@@ -69,10 +67,11 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
         movement = 10;
         scoreY = height/5;
         ball = getBall();
-        ball.setSpeed(6);
+        ball.setSpeed((int) (height * BALL_SPEED)); // 6
         player = getPaddle();
-        player.setSpeed(7);
+        player.setSpeed((int)(height * PADDLE_SPEED)); // 7
         ai = getRemotePaddle();
+        ai.setSpeed((int)(height * PADDLE_SPEED));
         url = Pong.class.getResource("pongLimit.wav");
         _url = Pong.class.getResource("pongScore.wav");
         clipContact = Applet.newAudioClip(url);
@@ -88,9 +87,9 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
 
     private RemotePaddle getRemotePaddle() {
         if (networkGameType == NetworkGameType.MASTER)
-            return new RemotePaddle(width-(int)(HORIZONTAL_SCALE * width), 0, SPEED_AI, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
+            return new RemotePaddle(width-(int)(HORIZONTAL_SCALE * width), 0, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
         else
-            return new RemotePaddle(0, 0, SPEED_AI, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
+            return new RemotePaddle(0, 0, width, height, (int)(HORIZONTAL_SCALE * width), (int)(VERTICAL_SCALE * height));
     }
 
     private Paddle getPaddle() {
@@ -101,7 +100,10 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
     }
 
     private Ball getBall() {
-        return new Ball(100, 40, (int)(BALL_SCALE * width), (int)(BALL_SCALE * width));
+        if (networkGameType == NetworkGameType.MASTER)
+            return new Ball(100, 40, (int)(BALL_SCALE * width), (int)(BALL_SCALE * width));
+        else
+            return new Ball(width - 110, 40, (int)(BALL_SCALE * width), (int)(BALL_SCALE * width));
     }
 
     @Override
@@ -137,9 +139,10 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
             int w = (int)f.getStringBounds("LOCAL", g2.getFontRenderContext()).getWidth();
             int h = (int)f.getStringBounds("LOCAL", g2.getFontRenderContext()).getHeight();
             g2.setFont(f);
-            g2.drawString("LOCAL", width / 2 + 30 + wp/2-w/2, 2*h);
+            int[] xpos = new int[] { width / 2 + 30 + wp / 2 - w / 2,  width / 2 - 30 - wh/2-w/2};
+            g2.drawString("LOCAL", networkGameType == NetworkGameType.MASTER? xpos[1] : xpos[0], 2*h);
             w = (int)f.getStringBounds("REMOTO", g2.getFontRenderContext()).getWidth();
-            g2.drawString("REMOTO", width / 2 - 30 - wh/2-w/2, 2*h);
+            g2.drawString("REMOTO", networkGameType == NetworkGameType.MASTER? xpos[0] : xpos[1], 2*h);
 
         } catch (NullPointerException exc) {
 
@@ -261,17 +264,19 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
 
     private void printScore() {
         aiTimer.stop();
-        playerTimer = new Timer(300, this);
+        playerTimer = new Timer(SCORE_SHOW_DELAY, this); // TODO: 300
         playerTimer.start();
         ballMovement = false;
     }
 
     private void reset() {
         ball = getBall();
-        ball.setSpeed(6);
+        ball.setSpeed((int) (height * BALL_SPEED)); // 6
         points = 0;
         _points = 0;
+        down = networkGameType == NetworkGameType.MASTER;
         player.setY(0);
+        ai.setY(0);
         repaint();
     }
 
@@ -286,6 +291,8 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
     }
 
     private void updateStatus() {
+        if (keys[KeyEvent.VK_R]) reset();
+
         if (player.getY() >= 2)
             if (keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_Q]) {
                 player.move(false);
@@ -297,6 +304,8 @@ public class NetworkGameScreen extends JPanel implements ActionListener {
     }
 
     private void updateRemote() {
+        if (remoteKeys[KeyEvent.VK_R]) reset();
+
         if (ai.getY() >= 2)
             if (remoteKeys[KeyEvent.VK_UP] || remoteKeys[KeyEvent.VK_Q]) {
                 ai.move(false);

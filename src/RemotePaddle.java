@@ -5,16 +5,22 @@ import java.awt.geom.Rectangle2D;
  */
 public class RemotePaddle extends Rectangle2D.Double {
     private final int gameHeight, gameWidth;
-    private final double  SPEED;
+    private double  speed;
 
-    public RemotePaddle(int x, int y, double speed, int gameWidth, int gameHeight, int width, int height) {
-        SPEED = speed;
+    public RemotePaddle(int x, int y, int gameWidth, int gameHeight, int width, int height) {
         this.x = x;
         this.y = y;
         this.height = height;
         this.width = width;
         this.gameHeight = gameHeight;
         this.gameWidth = gameWidth;
+    }
+
+    boolean setSpeed(int speed) {
+        if (speed < 0 || speed > 16)
+            return false;
+        this.speed = speed;
+        return true;
     }
 
     boolean setY(int y) {
@@ -25,9 +31,9 @@ public class RemotePaddle extends Rectangle2D.Double {
 
     void move(boolean dir) {
         if (dir)
-            y += SPEED;
+            y += speed;
         else
-            y -= SPEED;
+            y -= speed;
     }
 
 }

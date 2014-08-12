@@ -48,12 +48,12 @@ public class SlaveGameThread extends Thread {
                     int code = Integer.parseInt(line.substring(line.indexOf(':')+1));
                     boolean val = Boolean.valueOf(line.substring(0, line.indexOf(':')));
                     screen.remoteKeys[code] = val;
-                    System.out.println("From master: " + code + "=" + val);
+//                    System.out.println("From master: " + code + "=" + val);
                 }
                 synchronized(screen.keystr) {
                     if(!screen.keystr.isEmpty()) {
                         String s = screen.keystr.poll();
-                        System.out.println("Sending to master: " + s);
+//                        System.out.println("Sending to master: " + s);
                         outToMaster.writeBytes(s + '\n');
                         outToMaster.flush();
                     }

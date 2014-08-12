@@ -36,8 +36,8 @@ public class PongWindow extends JFrame implements ActionListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        this.width = 640;
-        this.height = 480;
+        this.width = 800;
+        this.height = 600;
         if (ISMAXIMIZED) {
             Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
             this.width = Math.max(dimension.width, dimension.height);
